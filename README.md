@@ -7,6 +7,13 @@
 3. Скачайте [Playbook](./playbook/) из репозитория с домашним заданием и перенесите его в свой репозиторий.
 
 ```
+thrsnknwldgthtsntpwr@ubnt:~/NETOLOGY/hw-ansible-01$ ls -al
+total 24
+drwxrwxr-x 4 thrsnknwldgthtsntpwr thrsnknwldgthtsntpwr 4096 мар  2 10:09 .
+drwxrwxr-x 8 thrsnknwldgthtsntpwr thrsnknwldgthtsntpwr 4096 мар  2 10:09 ..
+drwxrwxr-x 8 thrsnknwldgthtsntpwr thrsnknwldgthtsntpwr 4096 мар  2 10:10 .git
+drwxrwxr-x 4 thrsnknwldgthtsntpwr thrsnknwldgthtsntpwr 4096 мар  2 10:09 playbook
+-rw-rw-r-- 1 thrsnknwldgthtsntpwr thrsnknwldgthtsntpwr 5178 мар  2 10:12 README.md
 thrsnknwldgthtsntpwr@ubnt:~/NETOLOGY/hw-ansible-01$ ansible --version
 ansible 2.10.8
   config file = None
@@ -14,6 +21,7 @@ ansible 2.10.8
   ansible python module location = /usr/lib/python3/dist-packages/ansible
   executable location = /usr/bin/ansible
   python version = 3.10.12 (main, Feb  4 2025, 14:57:36) [GCC 11.4.0]
+
 ```
 
 ## Основная часть
