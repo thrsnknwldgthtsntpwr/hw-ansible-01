@@ -34,12 +34,14 @@ ok: [localhost] => {
 ```
 2. Найдите файл с переменными (group_vars), в котором задаётся найденное в первом пункте значение, и поменяйте его на `all default fact`.
 3. Воспользуйтесь подготовленным (используется `docker`) или создайте собственное окружение для проведения дальнейших испытаний.
+
 Запустил два контейнера
 ```
 docker run -d --name centos7 centos:cento7 /bin/bash -c "sleep 1d"
 docker run -d --name ubuntu ubuntu:latest /bin/bash -c "sleep 1d"
 ```
 4. Проведите запуск playbook на окружении из `prod.yml`. Зафиксируйте полученные значения `some_fact` для каждого из `managed host`.
+
 Были проблемы с версиями питона и ансибла. Долго перебирал подходящие, остановился на последней версии ansible 3.17, centos8 с Python3.12 и ubuntu 24.04
 
 ```
@@ -130,6 +132,7 @@ ansible-doc -t connection -l
         ansible_connection: ansible.builtin.local
 ```
 11. Запустите playbook на окружении `prod.yml`. При запуске `ansible` должен запросить у вас пароль. Убедитесь, что факты `some_fact` для каждого из хостов определены из верных `group_vars`.
+
 Добавил каталог local для группы хостов. Создал examp.yml с содержимым
 ```
 ---
