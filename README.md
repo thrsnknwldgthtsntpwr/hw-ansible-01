@@ -55,28 +55,99 @@ ok: [ubuntu] => {
 }
 ```
 5. Добавьте факты в `group_vars` каждой из групп хостов так, чтобы для `some_fact` получились значения: для `deb` — `deb default fact`, для `el` — `el default fact`.
+```
+thrsnknwldgthtsntpwr@ubnt:~/NETOLOGY/hw-ansible-01$ cat playbook/group_vars/deb/examp.yml 
+---
+  some_fact: "deb default fact"
+thrsnknwldgthtsntpwr@ubnt:~/NETOLOGY/hw-ansible-01$ cat playbook/group_vars/el/examp.yml 
+---
+  some_fact: "el default fact"thrsnknwldgthtsntpwr@ubnt:~/NETOLOGY/hw-ansible-01$ 
+```
 6.  Повторите запуск playbook на окружении `prod.yml`. Убедитесь, что выдаются корректные значения для всех хостов.
+```
+TASK [Print fact] ************************************************************************************************************************************************************************************************
+task path: /home/thrsnknwldgthtsntpwr/NETOLOGY/hw-ansible-01/playbook/site.yml:8
+redirecting (type: connection) ansible.builtin.docker to community.docker.docker
+ok: [centos7] => {
+    "msg": "el default fact"
+}
+redirecting (type: connection) ansible.builtin.docker to community.docker.docker
+ok: [ubuntu] => {
+    "msg": "deb default fact"
+}
+```
 7. При помощи `ansible-vault` зашифруйте факты в `group_vars/deb` и `group_vars/el` с паролем `netology`.
+```
+thrsnknwldgthtsntpwr@ubnt:~/NETOLOGY/hw-ansible-01$ ansible-vault encrypt playbook/group_vars/deb/examp.yml
+thrsnknwldgthtsntpwr@ubnt:~/NETOLOGY/hw-ansible-01$ ansible-vault encrypt playbook/group_vars/el/examp.yml
+```
 8. Запустите playbook на окружении `prod.yml`. При запуске `ansible` должен запросить у вас пароль. Убедитесь в работоспособности.
+```
+thrsnknwldgthtsntpwr@ubnt:~/NETOLOGY/hw-ansible-01$ ansible-playbook playbook/site.yml -i playbook/inventory/prod.yml --ask-vault-pass
+Vault password: 
+
+PLAY [Print os facts] ********************************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] *******************************************************************************************************************************************************************************************
+[WARNING]: Platform linux on host ubuntu is using the discovered Python interpreter at /usr/bin/python3.12, but future installation of another Python interpreter could change the meaning of that path. See
+https://docs.ansible.com/ansible-core/2.17/reference_appendices/interpreter_discovery.html for more information.
+ok: [ubuntu]
+[WARNING]: Platform linux on host centos7 is using the discovered Python interpreter at /usr/local/bin/python3.12, but future installation of another Python interpreter could change the meaning of that path.
+See https://docs.ansible.com/ansible-core/2.17/reference_appendices/interpreter_discovery.html for more information.
+ok: [centos7]
+
+TASK [Print OS] **************************************************************************************************************************************************************************************************
+ok: [centos7] => {
+    "msg": "CentOS"
+}
+ok: [ubuntu] => {
+    "msg": "Ubuntu"
+}
+
+TASK [Print fact] ************************************************************************************************************************************************************************************************
+ok: [centos7] => {
+    "msg": "el default fact"
+}
+ok: [ubuntu] => {
+    "msg": "deb default fact"
+}
+
+PLAY RECAP *******************************************************************************************************************************************************************************************************
+centos7                    : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0  
+```
 9. Посмотрите при помощи `ansible-doc` список плагинов для подключения. Выберите подходящий для работы на `control node`.
+```
+ansible-doc -t connection -l
+```
+Подходящий, наверное, ansible.builtin.local
+
 10. В `prod.yml` добавьте новую группу хостов с именем  `local`, в ней разместите localhost с необходимым типом подключения.
+```
+  local:
+    hosts:
+      localhost:
+        ansible_connection: ansible.builtin.local
+```
 11. Запустите playbook на окружении `prod.yml`. При запуске `ansible` должен запросить у вас пароль. Убедитесь, что факты `some_fact` для каждого из хостов определены из верных `group_vars`.
+Добавил каталог local для группы хостов. Создал examp.yml с содержимым
+```
+---
+  some_fact: 'localhost default fact'
+```
+
+Результат выполнения `ansible-playbook playbook/site.yml -i playbook/inventory/prod.yml --ask-vault-pass`
+```
+TASK [Print fact] ************************************************************************************************************************************************************************************************
+ok: [centos7] => {
+    "msg": "el default fact"
+}
+ok: [ubuntu] => {
+    "msg": "deb default fact"
+}
+ok: [localhost] => {
+    "msg": "localhost default fact"
+}
+```
 12. Заполните `README.md` ответами на вопросы. Сделайте `git push` в ветку `master`. В ответе отправьте ссылку на ваш открытый репозиторий с изменённым `playbook` и заполненным `README.md`.
 13. Предоставьте скриншоты результатов запуска команд.
-
-## Необязательная часть
-
-1. При помощи `ansible-vault` расшифруйте все зашифрованные файлы с переменными.
-2. Зашифруйте отдельное значение `PaSSw0rd` для переменной `some_fact` паролем `netology`. Добавьте полученное значение в `group_vars/all/exmp.yml`.
-3. Запустите `playbook`, убедитесь, что для нужных хостов применился новый `fact`.
-4. Добавьте новую группу хостов `fedora`, самостоятельно придумайте для неё переменную. В качестве образа можно использовать [этот вариант](https://hub.docker.com/r/pycontribs/fedora).
-5. Напишите скрипт на bash: автоматизируйте поднятие необходимых контейнеров, запуск ansible-playbook и остановку контейнеров.
-6. Все изменения должны быть зафиксированы и отправлены в ваш личный репозиторий.
-
----
-
-### Как оформить решение задания
-
-Выполненное домашнее задание пришлите в виде ссылки на .md-файл в вашем репозитории.
-
----
